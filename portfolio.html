@@ -1,290 +1,299 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Espacio Personal</title>
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --card-dark: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-purple: #818cf8;
-            --accent-pink: #f472b6;
-            --border: #334155;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Biblioteca de Juegos</title>
+  <style>
+    /* ESTILOS VISUALES (CSS) */
+    :root {
+      --bg-color: #121214;
+      --card-bg: #202024;
+      --text-color: #e1e1e6;
+      --primary: #8257e5;
+      --primary-hover: #9466ff;
+      --danger: #f75a68;
+      --success: #00b37e;
+      --warning: #e1ba15;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding: 40px 20px;
-            line-height: 1.5;
-        }
+    .dashboard-container {
+      width: 100%;
+      max-width: 900px;
+    }
 
-        .dashboard-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 30px;
+    }
 
-        header {
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 20px;
-        }
+    /* Formulario de añadir juego */
+    .game-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, var(--accent-purple), var(--accent-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
+    .game-form input, .game-form select, .game-form button {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #121214;
+      color: var(--text-color);
+      outline: none;
+    }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-        }
+    .game-form input {
+      flex: 2;
+      border: 1px solid #29292e;
+    }
 
-        @media (max-width: 900px) {
-            .grid-layout { grid-template-columns: 1fr; }
-        }
+    .game-form input:focus {
+      border-color: var(--primary);
+    }
 
-        .panel {
-            background-color: var(--card-dark);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
+    .game-form select {
+      flex: 1;
+      cursor: pointer;
+      border: 1px solid #29292e;
+    }
 
-        h2 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-        }
+    .game-form button {
+      background: var(--primary);
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-        .week-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+    .game-form button:hover {
+      background: var(--primary-hover);
+    }
 
-        .day-card {
-            background: #111827;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
+    /* Columnas de listas */
+    .lists-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
 
-        .day-name {
-            font-weight: 700;
-            color: var(--accent-purple);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
+    @media (max-width: 600px) {
+      .lists-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        .day-task {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            min-height: 40px;
-            outline: none;
-            padding: 4px;
-        }
+    .list-column {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      min-height: 400px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    .list-column h3 {
+      margin-top: 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #29292e;
+      display: flex;
+      justify-content: space-between;
+    }
 
-        input[type="text"] {
-            flex: 1;
-            background-color: #0f172a;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-        }
+    .games-list {
+      margin-top: 15px;
+    }
 
-        .btn-add {
-            background-color: var(--accent-purple);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+    /* Tarjetas de juego */
+    .game-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #121214;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      animation: fadeIn 0.3s ease;
+    }
 
-        .game-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .game-item {
-            background: #111827;
-            border: 1px solid var(--border);
-            padding: 14px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .game-card span {
+      font-weight: 500;
+      word-break: break-word;
+      margin-right: 10px;
+    }
 
-        .btn-delete {
-            background: transparent;
-            border: none;
-            color: #ef4444;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
 
-        .future-badge {
-            background: rgba(244, 114, 182, 0.15);
-            color: var(--accent-pink);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-    </style>
+    .actions button {
+      cursor: pointer;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .actions button:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-check { background-color: var(--success); color: white; }
+    .btn-return { background-color: var(--warning); color: #121214; }
+    .btn-delete { background-color: rgba(247, 90, 104, 0.2); color: var(--danger); }
+    .btn-delete:hover { background-color: var(--danger); color: white; }
+  </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <header>
-            <h1>Mi Espacio Personal</h1>
-            <p style="color: var(--text-muted)">Organización semanal y seguimiento de videojuegos.</p>
-        </header>
+  <div class="dashboard-container">
+    <h1>🎮 Mi Panel de Videojuegos</h1>
+    
+    <!-- Formulario para añadir juegos -->
+    <form id="game-form" class="game-form">
+      <input type="text" id="game-title" placeholder="¿Qué juego quieres apuntar?" required>
+      <select id="game-status">
+        <option value="pendiente">Pendiente ⏳</option>
+        <option value="jugado">Jugado ✅</option>
+      </select>
+      <button type="submit">Añadir</button>
+    </form>
 
-        <main>
-            <!-- Planificación Semanal -->
-            <section class="panel" style="margin-bottom: 30px;">
-                <h2>📅 Planificación de la Semana</h2>
-                <div class="week-container">
-                    <div class="day-card"><div class="day-name">Lunes</div><div class="day-task" contenteditable="true" id="task-lunes"></div></div>
-                    <div class="day-card"><div class="day-name">Martes</div><div class="day-task" contenteditable="true" id="task-martes"></div></div>
-                    <div class="day-card"><div class="day-name">Miércoles</div><div class="day-task" contenteditable="true" id="task-miercoles"></div></div>
-                    <div class="day-card"><div class="day-name">Jueves</div><div class="day-task" contenteditable="true" id="task-jueves"></div></div>
-                    <div class="day-card"><div class="day-name">Viernes</div><div class="day-task" contenteditable="true" id="task-viernes"></div></div>
-                    <div class="day-card"><div class="day-name">Sábado</div><div class="day-task" contenteditable="true" id="task-sabado"></div></div>
-                    <div class="day-card"><div class="day-name">Domingo</div><div class="day-task" contenteditable="true" id="task-domingo"></div></div>
-                </div>
-            </section>
-
-            <div class="grid-layout">
-                <!-- Juegos por terminar -->
-                <section class="panel">
-                    <h2>🎮 Juegos Pendientes</h2>
-                    <div class="input-group">
-                        <input type="text" id="current-game-input" placeholder="Añadir juego pendiente...">
-                        <button class="btn-add" id="btn-add-current">Añadir</button>
-                    </div>
-                    <ul class="game-list" id="current-games-list"></ul>
-                </section>
-
-                <!-- Juegos futuros -->
-                <section class="panel">
-                    <h2>🚀 Próximos Juegos</h2>
-                    <div class="input-group">
-                        <input type="text" id="future-game-input" placeholder="Añadir juego futuro...">
-                        <button class="btn-add" id="btn-add-future">Añadir</button>
-                    </div>
-                    <ul class="game-list" id="future-games-list"></ul>
-                </section>
-            </div>
-        </main>
+    <!-- Contenedores de las listas -->
+    <div class="lists-wrapper">
+      <div class="list-column">
+        <h3>⏳ Pendientes <span id="count-pendiente" style="color: gray; font-size: 14px;">0</span></h3>
+        <div id="list-pendiente" class="games-list"></div>
+      </div>
+      
+      <div class="list-column">
+        <h3>✅ Jugados <span id="count-jugado" style="color: gray; font-size: 14px;">0</span></h3>
+        <div id="list-jugado" class="games-list"></div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Forzar la creación de las bases de datos si no existen
-        if (localStorage.getItem('currentGames') === null) {
-            localStorage.setItem('currentGames', JSON.stringify(['Elden Ring', 'Cyberpunk 2077']));
-        }
-        if (localStorage.getItem('futureGames') === null) {
-            localStorage.setItem('futureGames', JSON.stringify(['GTA VI']));
-        }
+  <!-- LÓGICA EN JAVASCRIPT -->
+  <script>
+    const gameForm = document.getElementById('game-form');
+    const gameTitleInput = document.getElementById('game-title');
+    const gameStatusInput = document.getElementById('game-status');
+    const listPendiente = document.getElementById('list-pendiente');
+    const listJugado = document.getElementById('list-jugado');
+    const countPendiente = document.getElementById('count-pendiente');
+    const countJugado = document.getElementById('count-jugado');
 
-        const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+    // Recuperar datos de LocalStorage o crear un array vacío
+    let games = JSON.parse(localStorage.getItem('myGamesList')) || [];
 
-        // Cargar datos de la memoria
-        function getGames(type) {
-            return JSON.parse(localStorage.getItem(type + 'Games')) || [];
-        }
+    // Función para renderizar los juegos e interfaz
+    function renderGames() {
+        listPendiente.innerHTML = '';
+        listJugado.innerHTML = '';
+        
+        let cPendiente = 0;
+        let cJugado = 0;
 
-        // Guardar datos en la memoria
-        function saveGames(type, array) {
-            localStorage.setItem(type + 'Games', JSON.stringify(array));
-        }
+        games.forEach(game => {
+            const gameCard = document.createElement('div');
+            gameCard.classList.add('game-card');
+            
+            // Personalizar el borde izquierdo según el estado
+            if (game.status === 'jugado') {
+                gameCard.style.borderLeftColor = 'var(--success)';
+            }
 
-        // Pintar listas en la pantalla
-        function updateUI(type) {
-            const listElement = document.getElementById(type + '-games-list');
-            const games = getGames(type);
-            listElement.innerHTML = '';
+            gameCard.innerHTML = `
+                <span>${game.title}</span>
+                <div class="actions">
+                    ${game.status === 'pendiente' 
+                        ? `<button onclick="toggleStatus(${game.id})" class="btn-check" title="Marcar como jugado">✓</button>` 
+                        : `<button onclick="toggleStatus(${game.id})" class="btn-return" title="Mover a pendientes">↺</button>`
+                    }
+                    <button onclick="deleteGame(${game.id})" class="btn-delete" title="Eliminar">✕</button>
+                </div>
+            `;
 
-            games.forEach((game, index) => {
-                const li = document.createElement('li');
-                li.className = 'game-item';
-                if (type === 'current') {
-                    li.innerHTML = `<span>${game}</span><button class="btn-delete" data-index="${index}">✕ Terminado</button>`;
-                } else {
-                    li.innerHTML = `<span>${game}</span><span class="future-badge" data-index="${index}">✕ Quitar</span>`;
-                }
-                listElement.appendChild(li);
-            });
-        }
-
-        // Procesar nuevo juego
-        function handleAdd(type) {
-            const input = document.getElementById(type + '-game-input');
-            const name = input.value.trim();
-            if (!name) return;
-
-            const games = getGames(type);
-            games.push(name);
-            saveGames(type, games);
-            input.value = '';
-            updateUI(type);
-        }
-
-        // Procesar eliminación de juego
-        function handleDelete(type, index) {
-            const games = getGames(type);
-            games.splice(index, 1);
-            saveGames(type, games);
-            updateUI(type);
-        }
-
-        // Escuchadores de eventos para los botones de añadir
-        document.getElementById('btn-add-current').addEventListener('click', () => handleAdd('current'));
-        document.getElementById('btn-add-future').addEventListener('click', () => handleAdd('future'));
-
-        // Eventos para borrar juegos haciendo clic en la lista
-        document.getElementById('current-games-list').addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn-delete')) {
-                handleDelete('current', e.target.getAttribute('data-index'));
+            if (game.status === 'pendiente') {
+                listPendiente.appendChild(gameCard);
+                cPendiente++;
+            } else {
+                listJugado.appendChild(gameCard);
+                cJugado++;
             }
         });
 
-        document.getElementById('future-games-list').addEventListener('click', (e) => {
-            if (e.target.classList.contains('future-badge')) {
-                handleDelete('future', e.target.getAttribute('data-index'));
-            }
-        });
+        // Actualizar los contadores numéricos de las cabeceras
+        countPendiente.textContent = cPendiente;
+        countJugado.textContent = cJugado;
+    }
 
+    // Escuchar el envío del formulario
+    gameForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newGame = {
+            id: Date.now(),
+            title: gameTitleInput.value.trim(),
+            status: gameStatusInput.value
+        };
+
+        games.push(newGame);
+        saveAndReload();
+        gameForm.reset();
+    });
+
+    // Cambiar estado del juego (Pendiente <-> Jugado)
+    function toggleStatus(id) {
+        games = games.map(game => {
+            if (game.id === id) {
+                game.status = game.status === 'pendiente' ? 'jugado' : 'pendiente';
+            }
+            return game;
+        });
+        saveAndReload();
+    }
+
+    // Eliminar juego
+    function deleteGame(id) {
+        if(confirm("¿Seguro que quieres eliminar este juego?")) {
+            games = games.filter(game => game.id !== id);
+            saveAndReload();
+        }
+    }
+
+    // Guardar en LocalStorage y refrescar vista
+    function saveAndReload() {
+        localStorage.setItem('myGamesList', JSON.stringify(games));
+        renderGames();
+    }
+
+    // Carga inicial
+    renderGames();
+  </script>
+</body>
+</html>
