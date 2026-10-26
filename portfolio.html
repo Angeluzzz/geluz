@@ -196,6 +196,7 @@
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -220,7 +221,7 @@
                     <div class="day-card"><div class="day-name">Sábado</div><div class="day-task" contenteditable="true" id="task-sabado">Gaming intenso</div></div>
                     <div class="day-card"><div class="day-name">Domingo</div><div class="day-task" contenteditable="true" id="task-domingo">Organizar semana</div></div>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted)">* Haz clic en los textos para editarlos. Se guardarán automáticamente al salir del recuadro.</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted)">* Haz clic en las tareas para editarlas. Se guardan automáticamente al pulsar fuera.</p>
             </section>
 
             <!-- Bloques de Juegos Dinámicos -->
@@ -230,12 +231,10 @@
                 <section class="panel">
                     <h2>🎮 Juegos Pendientes por Terminar</h2>
                     <div class="input-group">
-                        <input type="text" id="current-game-input" placeholder="Nombre del juego que estás jugando...">
+                        <input type="text" id="current-game-input" placeholder="Nombre del juego...">
                         <button class="btn-add" onclick="addGame('current')">Añadir</button>
                     </div>
-                    <ul class="game-list" id="current-games-list">
-                        <!-- Los juegos guardados aparecerán aquí -->
-                    </ul>
+                    <ul class="game-list" id="current-games-list"></ul>
                 </section>
 
                 <!-- Juegos a futuro -->
@@ -245,9 +244,7 @@
                         <input type="text" id="future-game-input" placeholder="Juego esperado...">
                         <button class="btn-add" onclick="addGame('future')">Añadir</button>
                     </div>
-                    <ul class="game-list" id="future-games-list">
-                        <!-- Los juegos futuros aparecerán aquí -->
-                    </ul>
+                    <ul class="game-list" id="future-games-list"></ul>
                 </section>
 
             </div>
@@ -255,20 +252,29 @@
     </div>
 
     <script>
-        // Listas en memoria cargadas desde localStorage (o vacías si es la primera vez)
-        let currentGames = JSON.parse(localStorage.getItem('currentGames')) || ['Elden Ring (DLC)', 'Cyberpunk 2077'];
-        let futureGames = JSON.parse(localStorage.getItem('futureGames')) || ['GTA VI'];
+        // Inicializar arrays con valores por defecto solo si el almacenamiento está completamente vacío
+        if (!localStorage.getItem('currentGames')) {
+            localStorage.setItem('currentGames', JSON.stringify(['Elden Ring (DLC)', 'Cyberpunk 2077']));
+        }
+        if (!localStorage.getItem('futureGames')) {
+            localStorage.setItem('futureGames', JSON.stringify(['GTA VI']));
+        }
+
+        // Cargar listas activas desde el almacenamiento real
+        let currentGames = JSON.parse(localStorage.getItem('currentGames'));
+        let futureGames = JSON.parse(localStorage.getItem('futureGames'));
 
         const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
 
-        // Cargar todos los datos cuando se abra la página
-        window.onload = function() {
+        // Al cargar la página de cero
+        window.addEventListener('DOMContentLoaded', () => {
             renderList('current');
             renderList('future');
             loadWeeklyTasks();
-        };
+            setupWeeklyListeners();
+        });
 
-        // Renderizar las listas de juegos en pantalla
+        // Dibujar las listas en pantalla
         function renderList(type) {
             const listId = type === 'current' ? 'current-games-list' : 'future-games-list';
             const listElement = document.getElementById(listId);
@@ -285,6 +291,3 @@
                         <span>${game}</span>
                         <button class="btn-delete" onclick="deleteGame('current', ${index})">✕ Terminado</button>
                     `;
-                } else {
-                    li.innerHTML = `
-                        <span>${game}</span>
