@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Espacio Personal</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-purple: #818cf8;
+            --accent-pink: #f472b6;
+            --accent-green: #34d399;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Paneles Comunes */
+        .panel {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Sección Días de la Semana */
+        .week-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .day-card {
+            background: #111827;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .day-task {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            min-height: 40px;
+            outline: none;
+        }
+
+        .day-task:focus {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+
+        /* Listas de Juegos */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 1px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .btn-add {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background-color: #4f46e5;
+        }
+
+        .game-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .game-item {
+            background: #111827;
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .future-badge {
+            background: rgba(244, 114, 182, 0.15);
+            color: var(--accent-pink);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header>
+            <h1>Mi Espacio Personal</h1>
+            <p style="color: var(--text-muted)">Organización semanal, seguimiento de videojuegos y planes futuros.</p>
+        </header>
+
+        <!-- Cronograma de la Semana -->
+        <main>
+            <section class="panel" style="margin-bottom: 30px;">
+                <h2>📅 Planificación de la Semana</h2>
+                <div class="week-container">
+                    <div class="day-card"><div class="day-name">Lunes</div><div class="day-task" contenteditable="true">Hacer streams</div></div>
+                    <div class="day-card"><div class="day-name">Martes</div><div class="day-task" contenteditable="true">Estudiar código</div></div>
+                    <div class="day-card"><div class="day-name">Miércoles</div><div class="day-task" contenteditable="true">Gym / Relax</div></div>
+                    <div class="day-card"><div class="day-name">Jueves</div><div class="day-task" contenteditable="true">Noche de Chill</div></div>
+                    <div class="day-card"><div class="day-name">Viernes</div><div class="day-task" contenteditable="true">Estrenos / Cooperativos</div></div>
+                    <div class="day-card"><div class="day-name">Sábado</div><div class="day-task" contenteditable="true">Gaming intenso</div></div>
+                    <div class="day-card"><div class="day-name">Domingo</div><div class="day-task" contenteditable="true">Organizar semana</div></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted)">* Haz clic directamente sobre las tareas de los días para editarlas o escribir lo tuyo.</p>
+            </section>
+
+            <!-- Bloques de Juegos Dinámicos -->
+            <div class="grid-layout">
+                
+                <!-- Juegos por terminar -->
+                <section class="panel">
+                    <h2>🎮 Juegos Pendientes por Terminar</h2>
+                    <div class="input-group">
+                        <input type="text" id="current-game-input" placeholder="Nombre del juego que estás jugando...">
+                        <button class="btn-add" onclick="addGame('current')">Añadir</button>
+                    </div>
+                    <ul class="game-list" id="current-games-list">
+                        <li class="game-item">
+                            <span>Elden Ring (DLC)</span>
+                            <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
+                        </li>
+                        <li class="game-item">
+                            <span>Cyberpunk 2077</span>
+                            <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Juegos a futuro -->
+                <section class="panel">
+                    <h2>🚀 Próximos Lanzamientos / Deseos</h2>
+                    <div class="input-group">
+                        <input type="text" id="future-game-input" placeholder="Juego esperado...">
+                        <button class="btn-add" onclick="addGame('future')">Añadir</button>
+                    </div>
+                    <ul class="game-list" id="future-games-list">
+                        <li class="game-item">
+                            <span>GTA VI</span>
+                            <span class="future-badge">Próximamente</span>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Lógica Interactiva en JavaScript -->
+    <script>
+        function addGame(type) {
+            const inputId = type === 'current' ? 'current-game-input' : 'future-game-input';
+            const listId = type === 'current' ? 'current-games-list' : 'future-games-list';
+            
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(listId);
+            const gameName = input.value.trim();
+
+            if (gameName === '') return;
+
+            const li = document.createElement('li');
+            li.className = 'game-item';
+
+            if (type === 'current') {
+                li.innerHTML = `
+                    <span>${gameName}</span>
+                    <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
+                `;
+            } else {
+                li.innerHTML = `
+                    <span>${gameName}</span>
+                    <span class="future-badge">Deseado</span>
+                `;
+            }
+
+            list.appendChild(li);
