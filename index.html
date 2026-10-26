@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a mi Portafolio</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --glow: rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fondo decorativo abstracto */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            top: 20%;
+            left: 25%;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: #ec4899;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.2;
+            bottom: 20%;
+            right: 25%;
+            z-index: 1;
+        }
+
+        .welcome-container {
+            text-align: center;
+            z-index: 10;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #ec4899);
+            margin-bottom: 24px;
+            display: inline-block;
+            box-shadow: 0 0 20px var(--glow);
+            padding: 4px;
+        }
+
+        .profile-img-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .btn-enter {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-enter:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-enter svg {
+            margin-left: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-enter:hover svg {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="welcome-container">
+        <div class="profile-img">
+            <div class="profile-img-placeholder">👋</div>
+        </div>
+
+        <h1>Hola, soy [Tu Nombre]</h1>
+        <p class="subtitle">Bienvenido a mi espacio digital. Aquí encontrarás mis proyectos, experimentos de código y mi trayectoria profesional.</p>
+        
+        <a href="portfolio.html" class="btn-enter">
+            Explorar Portafolio
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </a>
+    </div>
+
+</body>
+</html>
