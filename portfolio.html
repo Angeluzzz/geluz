@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Biblioteca de Juegos</title>
+  <title>Mi Biblioteca de Videojuegos Pro</title>
   <style>
     /* ESTILOS VISUALES (CSS) */
     :root {
       --bg-color: #121214;
       --card-bg: #202024;
       --text-color: #e1e1e6;
+      --text-muted: #8d8d99;
       --primary: #8257e5;
       --primary-hover: #9466ff;
       --danger: #f75a68;
@@ -29,7 +30,7 @@
 
     .dashboard-container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1000px;
     }
 
     h1 {
@@ -92,7 +93,7 @@
       gap: 20px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .lists-wrapper {
         grid-template-columns: 1fr;
       }
@@ -121,8 +122,7 @@
     /* Tarjetas de juego */
     .game-card {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       background: #121214;
       padding: 14px;
       margin-bottom: 12px;
@@ -136,15 +136,34 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .game-card span {
-      font-weight: 500;
+    .game-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .game-card span.title {
+      font-weight: bold;
       word-break: break-word;
-      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .game-details {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px dashed #29292e;
+      padding-top: 8px;
+    }
+
+    .game-details p {
+      margin: 4px 0;
     }
 
     .actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
@@ -155,7 +174,7 @@
       border-radius: 4px;
       font-weight: bold;
       font-size: 14px;
-      transition: transform 0.1s, opacity 0.2s;
+      transition: transform 0.1s, background 0.2s;
     }
 
     .actions button:hover {
@@ -164,8 +183,82 @@
 
     .btn-check { background-color: var(--success); color: white; }
     .btn-return { background-color: var(--warning); color: #121214; }
-    .btn-delete { background-color: rgba(247, 90, 104, 0.2); color: var(--danger); }
+    .btn-edit { background-color: #29292e; color: var(--text-color); }
+    .btn-edit:hover { background-color: #323238; }
+    .btn-delete { background-color: rgba(247, 90, 104, 0.15); color: var(--danger); }
     .btn-delete:hover { background-color: var(--danger); color: white; }
+
+    /* VENTANA MODAL (Formulario flotante de edición) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    .modal-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-group label {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .modal-group input, .modal-group textarea {
+      padding: 10px;
+      background: #121214;
+      border: 1px solid #29292e;
+      color: var(--text-color);
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .modal-group input:focus, .modal-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-actions button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-save { background: var(--primary); color: white; }
+    .btn-cancel { background: #29292e; color: var(--text-color); }
   </style>
 </head>
 <body>
@@ -197,6 +290,31 @@
     </div>
   </div>
 
+  <!-- VENTANA EMERGENTE (MODAL) PARA EDITAR DETALLES -->
+  <div id="edit-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Editar Información</h3>
+      <form id="edit-form">
+        <input type="hidden" id="edit-game-id">
+        
+        <div class="modal-group">
+          <label for="edit-game-hours">Horas jugadas:</label>
+          <input type="number" id="edit-game-hours" min="0" placeholder="Ej: 45">
+        </div>
+
+        <div class="modal-group">
+          <label for="edit-game-comment">Comentario o Reseña:</label>
+          <textarea id="edit-game-comment" rows="4" placeholder="¿Qué te pareció el juego o por dónde vas?"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- LÓGICA EN JAVASCRIPT -->
   <script>
     const gameForm = document.getElementById('game-form');
@@ -206,6 +324,13 @@
     const listJugado = document.getElementById('list-jugado');
     const countPendiente = document.getElementById('count-pendiente');
     const countJugado = document.getElementById('count-jugado');
+
+    // Elementos del Modal
+    const editModal = document.getElementById('edit-modal');
+    const editForm = document.getElementById('edit-form');
+    const editGameId = document.getElementById('edit-game-id');
+    const editGameHours = document.getElementById('edit-game-hours');
+    const editGameComment = document.getElementById('edit-game-comment');
 
     // Recuperar datos de LocalStorage o crear un array vacío
     let games = JSON.parse(localStorage.getItem('myGamesList')) || [];
@@ -222,78 +347,23 @@
             const gameCard = document.createElement('div');
             gameCard.classList.add('game-card');
             
-            // Personalizar el borde izquierdo según el estado
             if (game.status === 'jugado') {
                 gameCard.style.borderLeftColor = 'var(--success)';
             }
 
+            // Detectar si tiene horas o comentarios guardados para mostrarlos
+            const hasHours = game.hours !== undefined && game.hours !== '';
+            const hasComment = game.comment && game.comment.trim() !== '';
+            
+            let detailsHTML = '';
+            if (hasHours || hasComment) {
+                detailsHTML = `<div class="game-details">`;
+                if (hasHours) detailsHTML += `<p>⏱️ <strong>Horas:</strong> ${game.hours}h</p>`;
+                if (hasComment) detailsHTML += `<p>💬 <strong>Nota:</strong> ${game.comment}</p>`;
+                detailsHTML += `</div>`;
+            }
+
             gameCard.innerHTML = `
-                <span>${game.title}</span>
-                <div class="actions">
-                    ${game.status === 'pendiente' 
-                        ? `<button onclick="toggleStatus(${game.id})" class="btn-check" title="Marcar como jugado">✓</button>` 
-                        : `<button onclick="toggleStatus(${game.id})" class="btn-return" title="Mover a pendientes">↺</button>`
-                    }
-                    <button onclick="deleteGame(${game.id})" class="btn-delete" title="Eliminar">✕</button>
-                </div>
-            `;
+                <div class="game-card-header">
+                    <span class="title">${game.title}</span>
 
-            if (game.status === 'pendiente') {
-                listPendiente.appendChild(gameCard);
-                cPendiente++;
-            } else {
-                listJugado.appendChild(gameCard);
-                cJugado++;
-            }
-        });
-
-        // Actualizar los contadores numéricos de las cabeceras
-        countPendiente.textContent = cPendiente;
-        countJugado.textContent = cJugado;
-    }
-
-    // Escuchar el envío del formulario
-    gameForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const newGame = {
-            id: Date.now(),
-            title: gameTitleInput.value.trim(),
-            status: gameStatusInput.value
-        };
-
-        games.push(newGame);
-        saveAndReload();
-        gameForm.reset();
-    });
-
-    // Cambiar estado del juego (Pendiente <-> Jugado)
-    function toggleStatus(id) {
-        games = games.map(game => {
-            if (game.id === id) {
-                game.status = game.status === 'pendiente' ? 'jugado' : 'pendiente';
-            }
-            return game;
-        });
-        saveAndReload();
-    }
-
-    // Eliminar juego
-    function deleteGame(id) {
-        if(confirm("¿Seguro que quieres eliminar este juego?")) {
-            games = games.filter(game => game.id !== id);
-            saveAndReload();
-        }
-    }
-
-    // Guardar en LocalStorage y refrescar vista
-    function saveAndReload() {
-        localStorage.setItem('myGamesList', JSON.stringify(games));
-        renderGames();
-    }
-
-    // Carga inicial
-    renderGames();
-  </script>
-</body>
-</html>
