@@ -61,7 +61,6 @@
             }
         }
 
-        /* Paneles Comunes */
         .panel {
             background-color: var(--card-dark);
             border: 1px solid var(--border);
@@ -78,7 +77,6 @@
             gap: 10px;
         }
 
-        /* Sección Días de la Semana */
         .week-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -108,6 +106,7 @@
             color: var(--text-muted);
             min-height: 40px;
             outline: none;
+            padding: 4px;
         }
 
         .day-task:focus {
@@ -116,7 +115,6 @@
             border-radius: 4px;
         }
 
-        /* Listas de Juegos */
         .input-group {
             display: flex;
             gap: 10px;
@@ -130,7 +128,6 @@
             border-radius: 8px;
             padding: 12px;
             color: var(--text-main);
-            font-size: 1px;
             font-size: 0.95rem;
             outline: none;
             transition: border 0.2s;
@@ -210,20 +207,20 @@
             <p style="color: var(--text-muted)">Organización semanal, seguimiento de videojuegos y planes futuros.</p>
         </header>
 
-        <!-- Cronograma de la Semana -->
         <main>
+            <!-- Cronograma de la Semana -->
             <section class="panel" style="margin-bottom: 30px;">
                 <h2>📅 Planificación de la Semana</h2>
                 <div class="week-container">
-                    <div class="day-card"><div class="day-name">Lunes</div><div class="day-task" contenteditable="true">Hacer streams</div></div>
-                    <div class="day-card"><div class="day-name">Martes</div><div class="day-task" contenteditable="true">Estudiar código</div></div>
-                    <div class="day-card"><div class="day-name">Miércoles</div><div class="day-task" contenteditable="true">Gym / Relax</div></div>
-                    <div class="day-card"><div class="day-name">Jueves</div><div class="day-task" contenteditable="true">Noche de Chill</div></div>
-                    <div class="day-card"><div class="day-name">Viernes</div><div class="day-task" contenteditable="true">Estrenos / Cooperativos</div></div>
-                    <div class="day-card"><div class="day-name">Sábado</div><div class="day-task" contenteditable="true">Gaming intenso</div></div>
-                    <div class="day-card"><div class="day-name">Domingo</div><div class="day-task" contenteditable="true">Organizar semana</div></div>
+                    <div class="day-card"><div class="day-name">Lunes</div><div class="day-task" contenteditable="true" id="task-lunes">Hacer streams</div></div>
+                    <div class="day-card"><div class="day-name">Martes</div><div class="day-task" contenteditable="true" id="task-martes">Estudiar código</div></div>
+                    <div class="day-card"><div class="day-name">Miércoles</div><div class="day-task" contenteditable="true" id="task-miercoles">Gym / Relax</div></div>
+                    <div class="day-card"><div class="day-name">Jueves</div><div class="day-task" contenteditable="true" id="task-jueves">Noche de Chill</div></div>
+                    <div class="day-card"><div class="day-name">Viernes</div><div class="day-task" contenteditable="true" id="task-viernes">Estrenos / Cooperativos</div></div>
+                    <div class="day-card"><div class="day-name">Sábado</div><div class="day-task" contenteditable="true" id="task-sabado">Gaming intenso</div></div>
+                    <div class="day-card"><div class="day-name">Domingo</div><div class="day-task" contenteditable="true" id="task-domingo">Organizar semana</div></div>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted)">* Haz clic directamente sobre las tareas de los días para editarlas o escribir lo tuyo.</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted)">* Haz clic en los textos para editarlos. Se guardarán automáticamente al salir del recuadro.</p>
             </section>
 
             <!-- Bloques de Juegos Dinámicos -->
@@ -237,14 +234,7 @@
                         <button class="btn-add" onclick="addGame('current')">Añadir</button>
                     </div>
                     <ul class="game-list" id="current-games-list">
-                        <li class="game-item">
-                            <span>Elden Ring (DLC)</span>
-                            <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
-                        </li>
-                        <li class="game-item">
-                            <span>Cyberpunk 2077</span>
-                            <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
-                        </li>
+                        <!-- Los juegos guardados aparecerán aquí -->
                     </ul>
                 </section>
 
@@ -256,10 +246,7 @@
                         <button class="btn-add" onclick="addGame('future')">Añadir</button>
                     </div>
                     <ul class="game-list" id="future-games-list">
-                        <li class="game-item">
-                            <span>GTA VI</span>
-                            <span class="future-badge">Próximamente</span>
-                        </li>
+                        <!-- Los juegos futuros aparecerán aquí -->
                     </ul>
                 </section>
 
@@ -267,31 +254,37 @@
         </main>
     </div>
 
-    <!-- Lógica Interactiva en JavaScript -->
     <script>
-        function addGame(type) {
-            const inputId = type === 'current' ? 'current-game-input' : 'future-game-input';
+        // Listas en memoria cargadas desde localStorage (o vacías si es la primera vez)
+        let currentGames = JSON.parse(localStorage.getItem('currentGames')) || ['Elden Ring (DLC)', 'Cyberpunk 2077'];
+        let futureGames = JSON.parse(localStorage.getItem('futureGames')) || ['GTA VI'];
+
+        const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+
+        // Cargar todos los datos cuando se abra la página
+        window.onload = function() {
+            renderList('current');
+            renderList('future');
+            loadWeeklyTasks();
+        };
+
+        // Renderizar las listas de juegos en pantalla
+        function renderList(type) {
             const listId = type === 'current' ? 'current-games-list' : 'future-games-list';
+            const listElement = document.getElementById(listId);
+            const array = type === 'current' ? currentGames : futureGames;
             
-            const input = document.getElementById(inputId);
-            const list = document.getElementById(listId);
-            const gameName = input.value.trim();
+            listElement.innerHTML = '';
 
-            if (gameName === '') return;
-
-            const li = document.createElement('li');
-            li.className = 'game-item';
-
-            if (type === 'current') {
-                li.innerHTML = `
-                    <span>${gameName}</span>
-                    <button class="btn-delete" onclick="this.parentElement.remove()">✕ Terminado</button>
-                `;
-            } else {
-                li.innerHTML = `
-                    <span>${gameName}</span>
-                    <span class="future-badge">Deseado</span>
-                `;
-            }
-
-            list.appendChild(li);
+            array.forEach((game, index) => {
+                const li = document.createElement('li');
+                li.className = 'game-item';
+                
+                if (type === 'current') {
+                    li.innerHTML = `
+                        <span>${game}</span>
+                        <button class="btn-delete" onclick="deleteGame('current', ${index})">✕ Terminado</button>
+                    `;
+                } else {
+                    li.innerHTML = `
+                        <span>${game}</span>
